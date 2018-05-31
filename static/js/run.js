@@ -1,3 +1,3 @@
-Functions.populateProjectsList()
-Animation.createBackgroundGrid()
+Functions.populateProjectsList();
+Animation.createBackgroundGrid();
 Animation.cascade()

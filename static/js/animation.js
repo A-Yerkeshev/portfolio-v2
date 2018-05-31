@@ -382,10 +382,10 @@ var Animation = {
 	// Animate projects when they first appear on page
 	appearProject: function(project, interval) {
 		setTimeout(function() {
-			var time = 1;
-			for (i=101; i>0; i--) {
+			var time = 2.5;
+			for (i=80; i>0; i--) {
 				Animation.moveLeft(project, i-1, time);
-				time = time + 1;
+				time = time + 2.5;
 			}
 		}, interval)		
 	},
@@ -428,7 +428,7 @@ var Animation = {
 	// Define one step of text area shrinking
 	shrinkStep: function(elem, width, time) {
 		setTimeout(function() {
-			elem.style.width = width + '%'
+			elem.style.width = width + '%';			
 		}, time)
 	},
 
@@ -436,13 +436,18 @@ var Animation = {
 	shrinkText: function() {
 		var textArea = document.getElementById('intro');
 		textArea.style.display = 'inline-block';
+		// Make text opaque when it moves
+		textArea.style.opacity = '0.1';
 		var width = 100;
-		var time = 0.1;
-		while (width >= 43.05) {
+		var time = 1;
+		while (width >= 43) {
 			Animation.shrinkStep(textArea, width, time);
-			width = width - 0.05;
-			time = time + 0.1
-		}
+			width = width - 0.25;
+			time = time + 1
+		};
+		setTimeout(function() {
+			textArea.style.opacity = '1';
+		}, 152)
 	},
 	
 	// Define one step function to appear the video
@@ -452,48 +457,68 @@ var Animation = {
 			videoFrame.style.width = w + '%';
 		}, time)
 	},
+	
 	// Gradually appear the video frame
 	appearVideo: function() {
+		// Create grid in front of frame
 		var videoFrame = document.getElementById('frame');
-		// Minimize video frame if video is already playing
-		videoFrame.style.height = '1%';
-		videoFrame.style.width = '1%';
 		videoFrame.style.display = 'inline-block';
-		var height = 0.05;
-		var width = 0.05;
-		var time = 0.1;
-		while (height <= 60) {
-			Animation.enlarge(videoFrame, height, width, time)
-			height = height + 0.05;	
-			time = time + 0.1;
-			if (width <= 50) {
-				width = width + 0.05;
-			}
+		var time = 3;
+		var step = 29.5;
+		for (i=60; i>0; i--) {
+			Animation.moveLeft(videoFrame, step, time);
+			step = step - 0.5;
+			time = time + 3;
+		};
+		Animation.showButtons();
+	},
+	
+	// Show buttons under the video
+	showButtons: function() {
+		var buttons = document.getElementsByClassName('button');
+		buttons[0].style.display = 'inline-block';
+		buttons[0].style.left = '50%';
+		buttons[1].style.display = 'inline-block';
+		buttons[1].style.left = '75%';
+		Animation.appear(buttons[0], 400, 40);
+		Animation.appear(buttons[1], 400, 40);
+	},
+	
+	// Declare fading step
+	fade: function(elem, opacity, time) {
+		setTimeout(function() {
+			elem.style.opacity = opacity
+		}, time)		
+	},
+	
+	// Disappear the element
+	disappear: function(elem, time, timeStep) {
+		var currentTime = 0;
+		var opacity = 1;
+		while (currentTime < time) {
+			Animation.fade(elem, opacity, currentTime);
+			opacity = opacity - (timeStep/time);
+			currentTime = currentTime + timeStep
 		}
 	},
 	
-	// Function for playing a video when project is selected
-	playVideo: function(project) {
-		var videoFrame = document.getElementById('frame');
-		// Check if frame is already displayed
-		var display = window.getComputedStyle(videoFrame, null).getPropertyValue('display');
-		if (display == 'none') {
-			setTimeout(function() {
-				Animation.appearVideo()
-			}, 100);
-			var video = document.createElement('source');
-			video.setAttribute('id', 'video');
-			video.setAttribute('src', project.video);
-			video.setAttribute('type', 'video/webm');
-			videoFrame.appendChild(video);
-		} else {
-			// Cahnge source of currently playing video
-			videoFrame.pause()
-			var video = document.getElementById('video');
-			video.setAttribute('src', project.video);
+	// Appear the element
+	appear: function(elem, time, timeStep) {
+		var currentTime = 0;
+		var opacity = 0;
+		while (opacity < 1) {
+			Animation.fade(elem, opacity, currentTime);
+			opacity = opacity + (timeStep/time);
+			currentTime = currentTime + timeStep
 		}
-		videoFrame.load();
-		videoFrame.play()
+	},
+	
+	// Change text of text area
+	changeText: function(project) {
+		var textArea = document.getElementById('intro');
+		Animation.disappear(textArea, 300, 30);
+		textArea.innerHTML = project.descr;
+		Animation.appear(textArea, 300, 30);
 	},
 	
 	// Shrink projects list and text area
@@ -502,14 +527,60 @@ var Animation = {
 		var projectsList = document.getElementById('projects-list');
 		var projects = document.getElementsByClassName('project');
 		Animation.shrinkText();
-		Data.projectsList.forEach(function(project, i) {
-			var big = Array.from(projects)[i]
-			var small = big.cloneNode(true);
-			small.style.height = '25%';
-			small.style.boxShadow = 'none';
-			projectsList.replaceChild(small, big);
-			// Reassign event listeners for projects
-			Functions.assignListeners(small, project, 25)
-		})
+		// Hide projects
+		Array.from(projects).forEach(function(project) {
+			Animation.disappear(project, 350, 10)
+		});
+		// Wait till text area and video area align
+		setTimeout(function() {
+			projectsList.style.borderTop = 'solid';
+			projectsList.style.borderColor = '#909090'
+			Data.projectsList.forEach(function(project, i) {
+				var big = Array.from(projects)[i]
+				var small = big.cloneNode(true);
+				small.style.height = '25%';
+				small.style.boxShadow = 'none';
+				projectsList.replaceChild(small, big);
+				// Reassign event listeners for projects
+				Functions.assignListeners(small, project, 25)
+				// Show minimized projects
+				Animation.appear(small, 350, 10)
+			})
+		}, 700)
+	},
+	
+	//Define one step of frame expansion
+	expand: function(frm, size, time) {
+		setTimeout(function() {
+			frm.style.height = size + '%';
+			frm.style.width = size + '%';
+		}, time)
+	},
+	
+	// Show iframe element
+	showFrame: function(project, win, btn) {
+		// Open ifame
+		win.setAttribute('src', project.url);
+		win.style.display = 'block'
+		var size = 45;
+		var time = 10;
+		for (i=0; i<50; i++) {
+			Animation.expand(win, size, time);
+			size = size + 1;
+			time = time + 10
+		};
+		// Show button to close iframe
+		btn.style.display = 'inline-block';
+		btn.style.right = '5%';
+		btn.style.top = '85%';
+		btn.style.width = '15%';
+		btn.style.height = '10%';
+	},
+	
+	// Hide frame when close button clicked
+	hideFrame: function(win, btn) {
+		win.style.display = 'none';
+		btn.style.display = 'none';
+		win.removeAttribute('src')
 	}
 }

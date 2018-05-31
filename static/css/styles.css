@@ -25,13 +25,16 @@ body {
 }
 
 #frame {
+	overflow: hidden;
 	display: none;
-	background-color: white;
-	height: 1%;
-	width: 1%;
+	background-color: #efefef;
+	height: 60%;
+	width: 50%;
 	vertical-align: bottom;
 	margin: 10px;
-	box-shadow: 0px 0px 20px;;
+	box-shadow: 0px 0px 20px;
+	position: relative;
+	left: 50em;
 }
 
 #projects-list {
@@ -39,9 +42,25 @@ body {
 	overflow: scroll;
 	overflow-y: hidden;
 	margin: 10px;
-	border-top: solid;
-	border-color: #909090;
 	padding-top: 10px;
+}
+
+#window {
+	display: none;
+	position: absolute;
+	top: 2.5%;
+	left: 2.5%;
+	height: 95%;
+	width: 95%;
+	background-color: white;
+	box-shadow: 0px 0px 100px;
+	z-index: 1;
+	background:url(../img/load.jpg) center center no-repeat;
+}
+
+#close {
+	display: none;
+	z-index: 2;
 }
 
 ::-webkit-scrollbar {
@@ -64,7 +83,7 @@ body {
 .project {
 	display: none;
 	position: relative;
-	left: 100em;
+	left: 80em;
 	background-color: #e1e1e1;
 	box-shadow: 0px 0px 2px 5px #ccc; 
 	height: 40%;
@@ -98,4 +117,19 @@ body {
 	display: inline-block;
 	height: 10%;
 	width: 1.25%;
+}
+
+.button {
+	display: none;
+	z-index: 1;
+	position: absolute;
+	top: 52%;
+	width: 10%;
+	height: 5%;
+	background-color: #eaeaea;
+	border: solid 1px rgb(150,150,150);
+	box-shadow: 0px 0px 10px #999;
+	font-family: serif;
+	font-size: 1.2em;
+	color: #333;
 }
