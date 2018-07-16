@@ -7,14 +7,7 @@ var Data = {
 			img: 'static/img/movies.jpg',
 			video: 'static/videos/movies-demo.mp4',
 			url: 'https://movie-trailers-webpage.herokuapp.com/'
-		}, {
-			id: 'portfolio',
-			title: 'Previous version of this site',
-			descr: 'Previous version of this website. Done with use of HTML and CSS only',
-			img: 'static/img/portfolio.jpg',
-			video: 'static/videos/portfolio-demo.mp4',
-			url: 'https://a-yerkeshev-portfolio.herokuapp.com/'
-		}, {
+		},{
 			id: 'catalog',
 			title: 'The web catalog',
 			descr: 'Web catalog with login and upload functionalities and connection to database',
@@ -28,7 +21,14 @@ var Data = {
 			img: 'static/img/map.jpg',
 			video: 'static/videos/map-demo.mp4',
 			url: 'https://neigh-map.herokuapp.com/'
-		}
+		}, {
+      id: 'portfolio',
+      title: 'Previous version of this site',
+      descr: 'Previous version of this website. Done with use of HTML and CSS only',
+      img: 'static/img/portfolio.jpg',
+      video: 'static/videos/portfolio-demo.mp4',
+      url: 'https://a-yerkeshev-portfolio.herokuapp.com/'
+    }
 	],
 	
 	// Create lists for each units grid to keep track of their index
